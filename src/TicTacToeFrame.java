@@ -33,7 +33,6 @@ public class TicTacToeFrame extends JFrame
 
         createBoardPanel();
         createControlPanel();
-        //playGame();
     }
 
     public void createBoardPanel()
@@ -67,6 +66,7 @@ public class TicTacToeFrame extends JFrame
                             {
                                 board[row][col].setText(player);
                                 moveCnt++;
+                                checkWin();
                                 if(player.equals("X"))
                                 {
                                     player = "O";
@@ -114,45 +114,42 @@ public class TicTacToeFrame extends JFrame
         mainPnl.add(ctrlPnl, BorderLayout.SOUTH);
     }
 
-    public void playGame()
+    public void resetGame()
     {
-        do // program loop
-        {
-            //begin a game
-            player = "X";
-            playing = true;
-            moveCnt = 0;
-            clearBoard();
-            do  // game loop
-            {
-                if(moveCnt >= MOVES_FOR_WIN)
-                {
-                    if(isWin(player))
-                    {
-                        JOptionPane.showMessageDialog(null, "Player " + player + " wins!");
-                        playing = false;
-                    }
-                }
-                if(moveCnt >= MOVES_FOR_TIE)
-                {
-                    if(isTie())
-                    {
-                        JOptionPane.showMessageDialog(null, "It's a tie!");
-                        playing = false;
-                    }
-                }
-
-            } while(playing);
-
-            int done = JOptionPane.showConfirmDialog(null, "Are you done playing?", "Confirm Ending Game", JOptionPane.YES_NO_OPTION);
-            if (done == JOptionPane.YES_OPTION)
-            {
-                finished = true;
-            }
-        } while(!finished);
+        clearBoard();
+        player = "O";
+        moveCnt = 0;
     }
 
-    private void clearBoard()
+    public void checkWin()
+    {
+        if(moveCnt >= MOVES_FOR_WIN)
+        {
+            if(isWin(player))
+            {
+                JOptionPane.showMessageDialog(null, "Player " + player + " wins!");
+                int playMore = JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Confirm Play Again", JOptionPane.YES_NO_OPTION);
+                if (playMore == JOptionPane.YES_OPTION)
+                {
+                    resetGame();
+                }
+            }
+        }
+        if(moveCnt >= MOVES_FOR_TIE)
+        {
+            if(isTie())
+            {
+                JOptionPane.showMessageDialog(null, "It's a tie!");
+                int playMore = JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Confirm Play Again", JOptionPane.YES_NO_OPTION);
+                if (playMore == JOptionPane.YES_OPTION)
+                {
+                    resetGame();
+                }
+            }
+        }
+    }
+
+    public void clearBoard()
     {
         // sets all the board elements to a space
         for(int row=0; row < ROW; row++)
